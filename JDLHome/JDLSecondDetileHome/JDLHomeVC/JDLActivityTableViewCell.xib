@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="314" id="KGk-i7-Jjw" customClass="JDLActivityTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="314"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="313"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKf-49-Xag">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2016-05-01" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4XE-cW-sEz">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.53725490196078429" green="0.53725490196078429" blue="0.53725490196078429" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="4XE-cW-sEz" secondAttribute="bottom" id="b3X-Wz-imQ"/>
+                            <constraint firstItem="4XE-cW-sEz" firstAttribute="top" secondItem="dKf-49-Xag" secondAttribute="top" id="hZu-w1-Yjy"/>
+                            <constraint firstItem="4XE-cW-sEz" firstAttribute="leading" secondItem="dKf-49-Xag" secondAttribute="leading" id="mmm-5g-5lR"/>
+                            <constraint firstAttribute="trailing" secondItem="4XE-cW-sEz" secondAttribute="trailing" id="ps7-gE-db6"/>
+                            <constraint firstAttribute="height" constant="45" id="znm-wL-9Rj"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SS4-GC-tlf">
+                        <rect key="frame" x="20" y="45" width="335" height="268"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="加够有好礼,1元秒杀天天有" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VvN-Gp-pw1">
+                                <rect key="frame" x="15" y="10" width="320" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="7xZ-TH-rQm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pic(1).png" translatesAutoresizingMaskIntoConstraints="NO" id="sQZ-gw-AjR">
+                                <rect key="frame" x="10" y="36" width="315" height="182"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=",你准备好了吗1,你准备好了吗1,你准备好了吗1,你准备好了吗1,你准备好了吗1,你准备好了吗1,你准备好了吗1" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vup-lM-lMN">
+                                <rect key="frame" x="10" y="223" width="315" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="ABg-yg-uS1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.53725490200000003" green="0.53725490200000003" blue="0.53725490200000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="vup-lM-lMN" firstAttribute="top" secondItem="sQZ-gw-AjR" secondAttribute="bottom" constant="5" id="6ei-Xq-0AL"/>
+                            <constraint firstAttribute="trailing" secondItem="vup-lM-lMN" secondAttribute="trailing" constant="10" id="CZM-eu-Gal"/>
+                            <constraint firstAttribute="trailing" secondItem="sQZ-gw-AjR" secondAttribute="trailing" constant="10" id="GzS-Tx-9En"/>
+                            <constraint firstItem="sQZ-gw-AjR" firstAttribute="top" secondItem="VvN-Gp-pw1" secondAttribute="bottom" constant="5" id="Jgc-bX-Ze3"/>
+                            <constraint firstItem="vup-lM-lMN" firstAttribute="top" secondItem="sQZ-gw-AjR" secondAttribute="bottom" constant="5" id="LaZ-ew-1gu"/>
+                            <constraint firstItem="sQZ-gw-AjR" firstAttribute="leading" secondItem="SS4-GC-tlf" secondAttribute="leading" constant="10" id="Xqv-ME-QTT"/>
+                            <constraint firstItem="sQZ-gw-AjR" firstAttribute="top" secondItem="VvN-Gp-pw1" secondAttribute="bottom" constant="5" id="dcx-7d-5pX"/>
+                            <constraint firstItem="vup-lM-lMN" firstAttribute="leading" secondItem="SS4-GC-tlf" secondAttribute="leading" constant="10" id="dqf-7m-mup"/>
+                            <constraint firstItem="VvN-Gp-pw1" firstAttribute="top" secondItem="SS4-GC-tlf" secondAttribute="top" constant="10" id="jcn-4C-BYW"/>
+                            <constraint firstItem="VvN-Gp-pw1" firstAttribute="leading" secondItem="SS4-GC-tlf" secondAttribute="leading" constant="15" id="nzj-dO-IgQ"/>
+                            <constraint firstAttribute="bottom" secondItem="vup-lM-lMN" secondAttribute="bottom" constant="10" id="qSU-3I-pVg"/>
+                            <constraint firstAttribute="trailing" secondItem="VvN-Gp-pw1" secondAttribute="trailing" id="xu3-mu-VYv"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="dKf-49-Xag" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="EM6-d3-hcT"/>
+                    <constraint firstAttribute="bottom" secondItem="SS4-GC-tlf" secondAttribute="bottom" id="FzW-CN-qFn"/>
+                    <constraint firstItem="dKf-49-Xag" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="On1-ai-0IJ"/>
+                    <constraint firstItem="SS4-GC-tlf" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="b0y-z7-f02"/>
+                    <constraint firstAttribute="trailing" secondItem="dKf-49-Xag" secondAttribute="trailing" id="fLB-gl-Ym7"/>
+                    <constraint firstItem="SS4-GC-tlf" firstAttribute="top" secondItem="dKf-49-Xag" secondAttribute="bottom" id="imE-0h-3d2"/>
+                    <constraint firstItem="SS4-GC-tlf" firstAttribute="top" secondItem="dKf-49-Xag" secondAttribute="bottom" id="oav-IE-L8C"/>
+                    <constraint firstAttribute="trailing" secondItem="SS4-GC-tlf" secondAttribute="trailing" constant="20" id="rTb-kr-m74"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <connections>
+                <outlet property="Act_detail" destination="vup-lM-lMN" id="87V-K6-qjB"/>
+                <outlet property="Act_image" destination="sQZ-gw-AjR" id="ecj-Qm-z8A"/>
+                <outlet property="Act_time" destination="4XE-cW-sEz" id="aVC-QD-uIq"/>
+                <outlet property="Act_title" destination="VvN-Gp-pw1" id="htn-gk-ZSa"/>
+                <outlet property="Act_view" destination="SS4-GC-tlf" id="Tu9-PO-DiL"/>
+            </connections>
+            <point key="canvasLocation" x="353.5" y="364"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="pic(1).png" width="610" height="340"/>
+    </resources>
+</document>

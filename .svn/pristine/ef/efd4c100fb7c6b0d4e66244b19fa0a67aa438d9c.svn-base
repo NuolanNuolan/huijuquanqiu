@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="123" id="KGk-i7-Jjw" customClass="JDLTwoWebViewTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="408" height="123"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="408" height="122"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pic(1).png" translatesAutoresizingMaskIntoConstraints="NO" id="cu5-lm-RQs">
+                        <rect key="frame" x="0.0" y="0.0" width="408" height="122"/>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="cu5-lm-RQs" secondAttribute="bottom" id="Z3l-5I-BEM"/>
+                    <constraint firstAttribute="trailing" secondItem="cu5-lm-RQs" secondAttribute="trailing" id="eef-gy-fIQ"/>
+                    <constraint firstItem="cu5-lm-RQs" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="iGl-QW-e8H"/>
+                    <constraint firstItem="cu5-lm-RQs" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="wey-eA-gbO"/>
+                </constraints>
+            </tableViewCellContentView>
+            <point key="canvasLocation" x="306" y="427.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="pic(1).png" width="610" height="340"/>
+    </resources>
+</document>

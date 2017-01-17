@@ -1,0 +1,535 @@
+//
+//  HttpManager.m
+//  PerfectProject
+//
+//  Created by Meng huan on 14/11/27.
+//  Copyright (c) 2014年 M.H Co.,Ltd. All rights reserved.
+//
+
+#import "HttpManager.h"
+
+
+
+#pragma mark - NSString扩展
+/**
+ *  NSString扩展
+ */
+@implementation NSString (HttpManager)
+
+// md5
+- (NSString *)md5
+{
+    if (self == nil || self.length == 0)
+    {
+        return nil;
+    }
+    
+    const char *value = [self UTF8String];
+    unsigned char outputBuffer[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(value, (CC_LONG)strlen(value), outputBuffer);
+    
+    NSMutableString *outputString = [[NSMutableString alloc] initWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for (NSInteger i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+    {
+        [outputString appendFormat:@"%02x",outputBuffer[i]];
+    }
+    
+    return outputString;
+}
+
+
+
+// 编码
+- (NSString *)encode
+{
+    NSString *outputString  = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
+                                                                                                    (CFStringRef)self,
+                                                                                                    NULL,
+                                                                                                    (CFStringRef)@"!*'();:@&amp;=+$,/?%#[]",
+                                                                                                    kCFStringEncodingUTF8
+                                                                                                    ));
+    outputString            = [outputString stringByReplacingOccurrencesOfString:@"<null>" withString:@""];
+    
+    return outputString;
+}
+
+// 解码
+- (NSString *)decode
+{
+    NSString *outputString = (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault,
+                                                                                                                   (__bridge CFStringRef)self,
+                                                                                                                   CFSTR(""),
+                                                                                                                   kCFStringEncodingUTF8
+                                                                                                                   ));
+    return outputString;
+}
+
+// 字符串转字典对象
+- (id)object
+{
+    id object = nil;
+    @try {
+        NSData *data    = [self dataUsingEncoding:NSUTF8StringEncoding];;
+        object          = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+    }
+    @catch (NSException *exception) {
+        MYLOG(@"%s [Line %d] JSON字符串转换成对象出错了-->\n%@",__PRETTY_FUNCTION__, __LINE__,exception);
+    }
+    @finally {
+    }
+    return object;
+}
+
+@end
+
+
+#pragma mark - NSObject扩展
+/**
+ *  NSObject扩展
+ */
+@implementation NSObject (HttpManager)
+
+// json转字符串
+- (NSString *)json
+{
+    NSString *jsonString = @"";
+    @try {
+        NSData *jsonData    = [NSJSONSerialization dataWithJSONObject:self options:0 error:nil];
+        jsonString          = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    @catch (NSException *exception) {
+        MYLOG(@"%s [Line %d] 对象转换成JSON字符串出错了-->\n%@",__PRETTY_FUNCTION__, __LINE__,exception);
+    }
+    @finally {
+    }
+    return jsonString;
+}
+
+@end
+
+
+#pragma mark - Http网络管理器
+/**
+ *  Http网络管理器
+ */
+@interface HttpManager () {
+    // 网络状态检测
+    Reachability *reachability;
+    
+    // http请求管理器
+    AFHTTPRequestOperationManager *operationManager;
+    
+    
+}
+@property(nonatomic,copy)NSString *url;
+@property(nonatomic,copy)NSString *httpMethod;
+@property(nonatomic,strong)NSDictionary *params;
+
+@end
+@implementation HttpManager
+
++ (HttpManager *)defaultManager
+{
+    static dispatch_once_t once_t = 0;
+    __strong static id defaultHttpManager = nil;
+    dispatch_once(&once_t, ^{
+        defaultHttpManager = [[self alloc] init];
+    });
+    return defaultHttpManager;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        // http接口请求管理器
+        operationManager = [AFHTTPRequestOperationManager manager];
+        operationManager.responseSerializer.acceptableContentTypes = nil;
+        
+        // 通过监听网址 www.baidu.com 来获取网络状态
+        reachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+        [reachability startNotifier];
+        
+        // 设置缓存
+        NSURLCache *urlCache = [NSURLCache sharedURLCache];
+        
+        // 设置缓存的大小为5MB
+        [urlCache setMemoryCapacity:5*1024*1024];
+        [NSURLCache setSharedURLCache:urlCache];
+    }
+    return self;
+}
+
+#pragma mark - 返回当前网络类型
+- (NetworkStatus)networkStatus
+{
+    return [reachability currentReachabilityStatus];
+}
+
+// get请求
+- (void)getRequestToUrl:(NSString *)url
+                 params:(NSDictionary *)params
+               complete:(void (^)(BOOL successed, NSDictionary *result))complete
+{
+    [self requestToUrl:url httpMethod:@"GET" useCache:NO params:params complete:complete];
+}
+
+// 未联网时使用缓存数据
+- (void)getCacheToUrl:(NSString *)url
+               params:(NSDictionary *)params
+             complete:(void (^)(BOOL successed, NSDictionary *result))complete
+{
+    [self requestToUrl:url httpMethod:@"GET" useCache:YES params:params complete:complete];
+}
+
+// POST 请求
+- (void)postRequestToUrl:(NSString *)url
+                  params:(NSDictionary *)params
+                complete:(void (^)(BOOL successed, NSDictionary *result))complete
+{
+    [self requestToUrl:url httpMethod:@"POST" useCache:NO params:params complete:complete];
+}
+
+#pragma mark - 如果有本地缓存数据直接从缓存读取，没有则从服务器端获取
+- (void)localCacheToUrl:(NSString *)url
+                 params:(NSDictionary *)params
+               complete:(void (^)(BOOL successed, NSDictionary *result))complete
+{
+    NSMutableURLRequest *request        = [self requestWithUrl:url httpMethod:@"GET" useCache:true params:params];
+    NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
+    
+    if (cachedResponse != nil && [[cachedResponse data] length] > 0)
+    {
+        // block返回本地缓存的数据
+        complete ? complete(true, [self dictionaryWithData:cachedResponse.data]) : nil;
+    }
+    else
+    {
+        // 本地没有缓存数据，从服务器端获取
+        [self getCacheToUrl:url params:params complete:complete];
+    }
+}
+
+
+#pragma mark - 返回请求request
+- (NSMutableURLRequest *)requestWithUrl:(NSString *)url
+                             httpMethod:(NSString *)httpMethod
+                               useCache:(BOOL)useCache
+                                 params:(NSDictionary *)params
+{
+    params = [[HttpManager getRequestBodyWithParams:params] copy];
+    
+    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
+    NSMutableURLRequest *request        = [serializer requestWithMethod:httpMethod URLString:url parameters:params error:nil];
+    
+    // 设置超时时间
+    [request setTimeoutInterval:10];
+    
+    // 使用了缓存
+    if (useCache)
+    {
+        [request setCachePolicy:NSURLRequestReturnCacheDataElseLoad];
+    }
+    
+    return request;
+}
+
+#pragma mark - 数据转换
+- (id)dictionaryWithData:(id)data
+{
+    NSDictionary *object = data;
+    if ([data isKindOfClass:[NSData class]])
+    {
+        object = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+    }
+    
+    if ([data isKindOfClass:[NSString class]])
+    {
+        object = [data object];
+    }
+    
+    return object?:data;
+}
+#pragma mark - 发起http网络请求
+- (void)requestToUrl:(NSString *)url
+          httpMethod:(NSString *)httpMethod
+            useCache:(BOOL)useCache
+              params:(NSDictionary *)params
+            complete:(void (^)(BOOL successed, NSDictionary *result))complete
+{
+    NetworkStatus st = [[HttpManager defaultManager] networkStatus];
+    if (st==0)
+    {
+        
+        [MBProgressHUD showError:@"请连接网络哦"];
+        return;
+    }
+    else
+    {
+
+
+        //[MBProgressHUD showMessage:@"加载中..."];
+
+        NSMutableURLRequest *request = [self requestWithUrl:url httpMethod:httpMethod useCache:useCache params:params];
+        void (^requestSuccessBlock)(AFHTTPRequestOperation *operation, id responseObject) = ^(AFHTTPRequestOperation *operation, id responseObject) {
+
+            [self logWithOperation:operation httpMethod:httpMethod params:params];
+            complete ? complete(true,[self dictionaryWithData:responseObject]) : nil;
+        };
+        void (^requestFailureBlock)(AFHTTPRequestOperation *operation, NSError *error) = ^(AFHTTPRequestOperation *operation, NSError *error) {
+            [self logWithOperation:operation httpMethod:httpMethod params:params];
+            complete ? complete(false,nil) : nil;
+        };
+        
+        AFHTTPRequestOperation *operation = nil;
+        if (useCache)
+        {
+            operation = [self cacheOperationWithRequest:request success:requestSuccessBlock failure:requestFailureBlock];
+        }
+        else
+        {
+            operation = [operationManager HTTPRequestOperationWithRequest:request success:requestSuccessBlock failure:requestFailureBlock];
+        }
+        [operationManager.operationQueue addOperation:operation];
+    }
+}
+
+#pragma mark - 缓存数据请求
+- (AFHTTPRequestOperation *)cacheOperationWithRequest:(NSURLRequest *)urlRequest
+                                              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    AFHTTPRequestOperation *operation = [operationManager HTTPRequestOperationWithRequest:urlRequest success:^(AFHTTPRequestOperation *operation, id responseObject){
+        NSCachedURLResponse *cachedURLResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:urlRequest];
+        
+        cachedURLResponse = [[NSCachedURLResponse alloc] initWithResponse:operation.response data:operation.responseData userInfo:nil storagePolicy:NSURLCacheStorageAllowed];
+        [[NSURLCache sharedURLCache] storeCachedResponse:cachedURLResponse forRequest:urlRequest];
+        
+        success(operation,responseObject);
+        
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (error.code == kCFURLErrorNotConnectedToInternet)
+        {
+            NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:urlRequest];
+            if (cachedResponse != nil && [[cachedResponse data] length] > 0)
+            {
+                success(operation, cachedResponse.data);
+            }
+            else
+            {
+                failure(operation, error);
+            }
+        }
+        else
+        {
+            failure(operation, error);
+        }
+    }];
+    
+    return operation;
+}
+
+- (void)logWithOperation:(AFHTTPRequestOperation *)operation httpMethod:(NSString *)httpMethod params:(NSDictionary *)params
+{
+//    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [MBProgressHUD hideHUD];
+    if ([[httpMethod uppercaseString] isEqualToString:@"GET"])
+    {
+        MYLOG(@"get request url:  %@  \n",[operation.request.URL.absoluteString decode]);
+    }
+    else
+    {
+        MYLOG(@"%@ request url:  %@  \npost params:  %@\n",[httpMethod lowercaseString],[operation.request.URL.absoluteString decode],params);
+    }
+    
+    if (operation.error)
+    {
+        MYLOG(@"%@ error :  %@",[httpMethod lowercaseString],operation.error);
+    }
+    else
+    {
+        id response = [operation.responseString object]?:operation.responseString;
+        MYLOG(@"%@ responseObject:  %@",[httpMethod lowercaseString],response);
+    }
+}
+
+
+
+
+
+#pragma mark - 上传文件
+- (AFHTTPRequestOperation *)uploadToUrl:(NSString *)url
+                                 params:(NSDictionary *)params
+                                  files:(NSArray *)files
+                               complete:(void (^)(BOOL successed, NSDictionary *result))complete
+{
+    return [self uploadToUrl:url params:params files:files process:nil complete:complete];
+}
+
+#pragma mark - 上传文件，可以查看进度 process_block
+- (AFHTTPRequestOperation *)uploadToUrl:(NSString *)url
+                                 params:(NSDictionary *)params
+                                  files:(NSArray *)files
+                                process:(void (^)(NSInteger writedBytes, NSInteger totalBytes))process
+                               complete:(void (^)(BOOL successed, NSDictionary *result))complete
+{
+    params = [[HttpManager getRequestBodyWithParams:params] copy];
+    
+//    MYLOG(@"post request url:  %@  \npost params:  %@",url,params);
+    
+    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
+    
+    NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST" URLString:url parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        for (NSDictionary *fileItem in files) {
+            id value = [fileItem objectForKey:@"file"];        //支持四种数据类型：NSData、UIImage、NSURL、NSString
+            NSString *name = [fileItem objectForKey:@"key"];            //文件字段的key
+            NSString *fileName = [fileItem objectForKey:@"name"];       //文件名称
+            NSString *mimeType = [fileItem objectForKey:@"type"];       //文件类型
+            mimeType = mimeType ? mimeType : @"image/jpeg";
+            name = name ? name : @"file";
+            
+            if ([value isKindOfClass:[NSData class]]) {
+                [formData appendPartWithFileData:value name:name fileName:fileName mimeType:mimeType];
+            }else if ([value isKindOfClass:[UIImage class]]) {
+                if (UIImagePNGRepresentation(value)) {  //返回为png图像。
+                    [formData appendPartWithFileData:UIImagePNGRepresentation(value) name:name fileName:fileName mimeType:mimeType];
+                }else {   //返回为JPEG图像。
+                    [formData appendPartWithFileData:UIImageJPEGRepresentation(value, 0.5) name:name fileName:fileName mimeType:mimeType];
+                }
+            }else if ([value isKindOfClass:[NSURL class]]) {
+                [formData appendPartWithFileURL:value name:name fileName:fileName mimeType:mimeType error:nil];
+            }else if ([value isKindOfClass:[NSString class]]) {
+                [formData appendPartWithFileURL:[NSURL URLWithString:value]  name:name fileName:fileName mimeType:mimeType error:nil];
+            }
+        }
+    } error:nil];
+    
+    AFHTTPRequestOperation *operation = nil;
+    operation = [operationManager HTTPRequestOperationWithRequest:request
+                                                          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                                              id response = [operation.responseString object]?:operation.responseString;
+//                                                              MYLOG(@"post responseObject:",response);
+                                                              if (complete) {
+                                                                  complete(true,[self dictionaryWithData:responseObject]);
+                                                              }
+                                                          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//                                                              MYLOG(@"post error :  %@",error);
+                                                              if (complete) {
+                                                                  complete(false,nil);
+                                                              }
+                                                          }];
+    
+    [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        float progress = (float)totalBytesWritten / totalBytesExpectedToWrite;
+//        MYLOG(@"upload process: %.0f%% (%lld/%lld)",100*progress,totalBytesWritten,totalBytesExpectedToWrite);
+        if (process) {
+            process((NSUInteger)totalBytesWritten,(NSUInteger)totalBytesExpectedToWrite);
+        }
+    }];
+    [operation start];
+    
+    return operation;
+}
+
+#pragma mark - 下载文件
+- (AFHTTPRequestOperation *)downloadFromUrl:(NSString *)url
+                                   filePath:(NSString *)filePath
+                                   complete:(void (^)(BOOL successed, NSDictionary *response))complete
+{
+    return [self downloadFromUrl:url params:nil filePath:filePath process:nil complete:complete];
+}
+
+#pragma mark - 下载文件，可以查看进度 process_block
+- (AFHTTPRequestOperation *)downloadFromUrl:(NSString *)url
+                                     params:(NSDictionary *)params
+                                   filePath:(NSString *)filePath
+                                    process:(void (^)(NSInteger readBytes, NSInteger totalBytes))process
+                                   complete:(void (^)(BOOL successed, NSDictionary *response))complete
+{
+    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
+    NSMutableURLRequest *request = [serializer requestWithMethod:@"GET" URLString:url parameters:params error:nil];
+    MYLOG(@"get request url: %@",[request.URL.absoluteString decode]);
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer.acceptableContentTypes = nil;
+    
+    NSString *tmpPath = [filePath stringByAppendingString:@".tmp"];
+    operation.outputStream = [[NSOutputStream alloc] initToFileAtPath:tmpPath append:NO];
+    
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSArray *mimeTypeArray = @[@"text/html", @"application/json"];
+        NSError *moveError = nil;
+        if ([mimeTypeArray containsObject:operation.response.MIMEType]) {
+            //返回的是json格式数据
+            responseObject = [self dictionaryWithData:[NSData dataWithContentsOfFile:tmpPath]];
+            [[NSFileManager defaultManager] removeItemAtPath:tmpPath error:nil];
+            MYLOG(@"get responseObject:  %@",responseObject);
+        }else{
+            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+            [[NSFileManager defaultManager] moveItemAtPath:tmpPath toPath:filePath error:&moveError];
+        }
+        
+        if (complete && !moveError) {
+            complete(true,responseObject);
+        }else{
+            complete?complete(false,responseObject):nil;
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        MYLOG(@"get error :  %@",error);
+        
+//        [operation resume];
+        
+//        [[NSFileManager defaultManager] removeItemAtPath:tmpPath error:nil];
+        if (complete) {
+            complete(false,nil);
+        }
+    }];
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        float progress = (float)totalBytesRead / totalBytesExpectedToRead;
+        MYLOG(@"download process: %.0f%% (%lld/%lld)",100*progress,totalBytesRead,totalBytesExpectedToRead);
+        if (process) {
+            process((NSUInteger)totalBytesRead,(NSUInteger)totalBytesExpectedToRead);
+        }
+    }];
+    
+    [operation start];
+    
+    return operation;
+}
+
+
+#pragma mark - 返回请求体的参数字典
++ (NSMutableDictionary *)getRequestBodyWithParams:(NSDictionary *)params
+{
+    // 请求体字典赋值
+    NSMutableDictionary *requestBody = params ? [params mutableCopy] : [[NSMutableDictionary alloc] init];
+    
+    // 遍历参数体里的数据
+    for (NSString *key in [params allKeys])
+    {
+        id value = [params objectForKey:key];
+        if ([value isKindOfClass:[NSDate class]])
+        {
+            [requestBody setValue:@([value timeIntervalSince1970]*1000) forKey:key];
+        }
+        
+        if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]])
+        {
+            [requestBody setValue:[value json] forKey:key];
+        }
+    }
+    
+//    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+//    if (token)
+//    {
+//        [requestBody setObject:token forKey:@"token"];
+//    }
+//    [requestBody setObject:@"ios" forKey:@"genus"];
+    
+    return requestBody;
+}
+
+@end

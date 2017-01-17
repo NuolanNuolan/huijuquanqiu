@@ -1,0 +1,421 @@
+//
+//  JDLPublicDetileViewController.m
+//  GlobalConvergence
+//
+//  Created by 杭州尖刀连电子商务有限公司 on 16/3/18.
+//  Copyright :copyright: 2016年 JDL. All rights reserved.
+//
+
+#import "JDLPublicDetileViewController.h"
+#import "JDLPublicDetileTableViewCell.h"
+#import "JDLPublickSectionTableViewCell.h"
+#import "JDLBuyViewController.h"
+#import "JDLDayTJModel.h"
+
+static CGFloat const maxScale = 1.1;
+
+@interface JDLPublicDetileViewController ()<UIGestureRecognizerDelegate,JDLPublicDetileTableViewCellDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>
+{
+    //ID；
+    NSString *_prID;
+    
+    UITableView *_publiTabView;
+    //标题数组
+    NSMutableArray *_titleArray;
+    //标题下的横线
+    UIView *_xianView;
+    UIScrollView *_titleScrollView;
+    UIScrollView *_mainScrollView;
+    UIView * _titleBgView;
+    UIButton *_btnTitle;
+//    接收数据的model
+    NSString *_imgstr;
+}
+
+@property(nonatomic,strong)UIButton *selectedBtn;
+@end
+
+@implementation JDLPublicDetileViewController
+//初始化方法传入title
+- (id)initWith_Pr_ID:(NSString *)Pr_ID
+{
+    
+    self = [super init];
+    if (self) {
+        _prID =Pr_ID;
+    }
+    return self;
+}
+- (void)viewDidLoad {
+    MYLOG(@"%@",_prID);
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
+    _titleArray = [[NSMutableArray alloc]init];
+    [self LoadData];
+    [self createADScrollView];
+    
+    [self createNavLeftItem];
+    //    dismiss_w;
+    [self createRightItem];
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    //    [self createtabView];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    [self.tabBarController.tabBar setHidden:YES];
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+#pragma mark - 设置左边返回按钮
+-(void)createNavLeftItem{
+    
+    navLeftreturn;
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:leftBtn];
+    self.navigationItem.leftBarButtonItem = leftItem;
+    
+}
+
+-(void)createViewClick
+{
+    [self.tabBarController.tabBar setHidden:NO];
+    //    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+
+
+#pragma mark - 设置右侧搜索按钮
+-(void)createRightItem{
+    
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.frame = CGRectMake(screen_Width - 30, 0, 20, 20);
+    [rightBtn setBackgroundImage:[UIImage imageNamed:@"nav_search"] forState:UIControlStateNormal];
+    [rightBtn setImage:[UIImage imageNamed:@"nav_search(1)"] forState:UIControlStateHighlighted];
+    [rightBtn addTarget:self action:@selector(rightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:rightBtn];
+    self.navigationItem.rightBarButtonItem = rightItem;
+}
+
+
+-(void)rightBtnClick:(UIButton *)btn{
+    
+    
+}
+//加载数据
+-(void)LoadData
+{
+    [MBProgressHUD showMessage:@"加载中"];
+    NSDictionary *dic = @{@"type":_prID};
+    [JDLPublicModel getObjectsWithParams:dic completion:^(NSArray *objects, NSError *error) {
+        if (error == nil) {
+            [MBProgressHUD hideHUD];
+            if (objects) {
+              
+                //                _Data_array = [NSMutableArray arrayWithArray:objects];
+                for (JDLPublicModel *Puble_model in objects) {
+                    NSString *str = Puble_model.cname;
+                    [_titleArray addObject:str];
+                }
+                [self creatTitleView];
+                [self creatMainScrollView];
+            }else{
+                 [MBProgressHUD hideHUD];
+                [MBProgressHUD showError:@"服务器繁忙"];
+                MYLOG(@"%@",error);
+            }
+        }
+    }];
+    
+    
+//    NSDictionary *dict = @{@"bid":_prID};
+//    [JDLDayTJModel getObjectsWithParams:dict completion:^(NSArray *objects, NSError *error) {
+//        if (error == nil) {
+//            if (objects) {
+//                
+//                //_Data_array = [NSMutableArray arrayWithArray:objects];
+//                for (JDLDayTJModel *DayTJ_model in objects) {
+//                    NSString *str = DayTJ_model.cname;
+//                    _imgstr = DayTJ_model.pimg;
+////              [_titleArray addObject:imgstr];
+//                    [_titleArray addObject:str];
+//                }
+//                [self creatTitleView];
+//                [self creatMainScrollView];
+//            }else{
+//                MYLOG(@"%@",error);
+//            }
+//        }
+//    }];
+}
+
+
+-(void)createADScrollView{
+    //比例尺
+    float h = screen_Width / 414.0f * 200;
+    UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, screen_Width, h)];
+    //    #3CB371             #43CD80         #218868          #2E8B57
+    headView.backgroundColor = [UIColor colorWithRed:0.2 green:0.6549 blue:0.3686 alpha:1.0];
+    
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, headView.frame.size.width, headView.frame.size.height)];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:_imgstr]];
+    [headView addSubview:imageView];
+    [self.view addSubview:headView];
+}
+
+
+#pragma mark - 创建标题栏
+- (void)creatTitleView{
+    
+//    _titleArray = @[@"杭州",@"宁波",@"温州",@"湖州",@"绍兴",@"杭州",@"杭州",@"杭州",@"杭州",@"杭州",@"杭州",@"杭州",@"杭州"];
+    //    _titleArray = @[@"da",@"fas",@"fs"];
+    //比例尺
+    float h = screen_Width / 414.0f * 200;
+    _titleBgView = [[UIView alloc] initWithFrame:CGRectMake(0, h+64, screen_Width, TITLEVIEW_HEIGHT)];
+    _titleBgView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_titleBgView];
+    
+    _titleScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, screen_Width, TITLEVIEW_HEIGHT)];
+    _titleScrollView.backgroundColor = [UIColor whiteColor];
+    _titleScrollView.delegate = self;
+    _titleScrollView.contentSize = CGSizeMake(BTNTITLE_WITH*_titleArray.count, 0);
+    _titleScrollView.showsHorizontalScrollIndicator = NO;
+    _titleScrollView.bounces = NO;
+    [_titleBgView addSubview:_titleScrollView];
+    
+    for (int i=0; i<_titleArray.count; i++) {
+        _btnTitle = [UIButton buttonWithType:UIButtonTypeCustom];
+        _btnTitle.frame = CGRectMake(BTNTITLE_WITH*i, 0, BTNTITLE_WITH, TITLEVIEW_HEIGHT);
+        [_btnTitle setTitle:_titleArray[i]forState:UIControlStateNormal];
+        [_btnTitle setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        //        [_btnTitle setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+        _btnTitle.titleLabel.font = [UIFont systemFontOfSize:15.0f/iphone6_width*screen_Width];
+        _btnTitle.tag = i+100;
+        //        btnTitle = _titleBtn;
+        [_btnTitle addTarget:self action:@selector(btnTitleClick:) forControlEvents:UIControlEventTouchDown];
+        [_titleScrollView addSubview:_btnTitle];
+        if (i==0) {
+            [_btnTitle setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self btnTitleClick:_btnTitle];
+        }
+    }
+    _xianView = [[UIView alloc] initWithFrame:CGRectMake(0, TITLEVIEW_HEIGHT-2, BTNTITLE_WITH, 2)];
+    _xianView.backgroundColor = [UIColor orangeColor];
+    [_titleScrollView addSubview:_xianView];
+}
+
+#pragma mark - 标题栏的每个按钮
+- (void)btnTitleClick:(UIButton *)btn{
+    [self changedBtnColor:btn];
+    //    [self setup]
+    NSInteger i = btn.tag;
+    CGFloat x = i *screen_Width;
+    _mainScrollView.contentOffset = CGPointMake(x, 0);
+    
+    [UIView animateWithDuration:0.1f animations:^{
+        CGRect rc = _xianView.frame;
+        _xianView.frame = CGRectMake(rc.size.width*(btn.tag-100), rc.origin.y, rc.size.width, rc.size.height);
+        [_mainScrollView setContentOffset:CGPointMake(SCREEN_WIDTH*(btn.tag-100), 0)];
+        //    [_titleScrollView setContentOffset:CGPointMake((_btnTitle.tag-100)*_titleScrollView.bounds.size.width, 0)animated:NO];
+    }];
+}
+
+
+-(void)changedBtnColor:(UIButton *)btn{
+    [self.selectedBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    self.selectedBtn.transform = CGAffineTransformIdentity;
+    
+    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    btn.transform = CGAffineTransformMakeScale(maxScale, maxScale);
+    self.selectedBtn = btn;
+    //    [self s
+}
+
+
+//- (void)btnClick:(UIButton *)btn{
+//        btn.selected = !btn.selected;
+//}
+
+#pragma mark - 创建主视图scrollView
+- (void)creatMainScrollView{
+    float h = screen_Width / 414.0f * 200;
+    _mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, h + TITLEVIEW_HEIGHT+64, SCREEN_WIDTH, screen_Height - NAVI_HEIGHT - TABBAR_HEIGHT - TITLEVIEW_HEIGHT)];
+    _mainScrollView.contentSize =  CGSizeMake(SCREEN_WIDTH*_titleArray.count, 0);
+    _mainScrollView.pagingEnabled = YES;
+    _mainScrollView.delegate = self;
+    _mainScrollView.bounces = NO;
+    _mainScrollView.tag = 3200;
+    _mainScrollView.showsHorizontalScrollIndicator = NO;
+    _mainScrollView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_mainScrollView];
+    [self creatSubView];
+    //  [self createtabView];
+}
+
+-(void)creatSubView{
+    for (int i=0; i<_titleArray.count; i++) {
+        
+        _publiTabView = [[UITableView alloc]initWithFrame:CGRectMake(screen_Width*i, 0, screen_Width, screen_Height-80)style:UITableViewStylePlain];
+        _publiTabView.backgroundColor = [UIColor whiteColor];
+        _publiTabView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _publiTabView.delegate = self;
+        _publiTabView.dataSource = self;
+        _publiTabView.tag=1000;
+        //        _publiTabView.backgroundColor = [UIColor blackColor];
+        [_mainScrollView addSubview:_publiTabView];
+        //        UIView *v = [[UIView alloc]init];
+        //        v.frame = CGRectMake(screen_Width*i, 0, SCREEN_WIDTH, screen_Height - TABBAR_HEIGHT -     NAVI_HEIGHT - TITLEVIEW_HEIGHT);
+        //        v.backgroundColor = [UIColor redColor];
+        //        [_mainScrollView addSubview:v];
+        
+        //        JDLPublicDetileViewController *bvc = [[JDLPublicDetileViewController alloc] init];
+        //
+        //        bvc.view.frame = CGRectMake(screen_Width*i, 0, SCREEN_WIDTH, screen_Height - TABBAR_HEIGHT -     NAVI_HEIGHT - TITLEVIEW_HEIGHT);
+        //        [_mainScrollView addSubview:bvc.view];
+        //        [self addChildViewController:bvc];
+    }
+}
+
+
+#pragma mark - ScrollView的代理
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    if (scrollView.tag == 3200) {
+        CGRect rc = _xianView.frame;
+        _xianView.frame = CGRectMake(rc.size.width*_mainScrollView.contentOffset.x/SCREEN_WIDTH, rc.origin.y, rc.size.width, rc.size.height);
+        [UIView animateWithDuration:0.2 animations:^{
+            NSInteger count = scrollView.contentOffset.x/scrollView.frame.size.width;
+            UIButton *btn = (UIButton *)[self.view viewWithTag:count+100];
+            
+            [self changedBtnColor:btn];
+        }];
+        //        for (int i=0; i<_titleArray.count; i++) {
+        //        _btnTitle.frame = CGRectMake(BTNTITLE_WITH*_mainScrollView.contentOffset.x/SCREEN_WIDTH, 0, BTNTITLE_WITH, TITLEVIEW_HEIGHT);
+        //        _btnTitle.titleLabel.font = [UIFont systemFontOfSize:18.0f/iphone6_width*screen_Width];
+        //            UIButton *but = (UIButton *)[];
+        //            [_btnTitle setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        //            _btnTitle.transform = CGAffineTransformMakeScale(maxScale, maxScale);
+        //            self.selectedBtn = _btnTitle;
+        //        }
+        [_titleScrollView setContentOffset:CGPointMake(_mainScrollView.contentOffset.x*(_titleScrollView.contentSize.width - _titleScrollView.frame.size.width)/(_mainScrollView.contentSize.width - _mainScrollView.frame.size.width), 0)];
+        
+        //        NSInteger i  = _mainScrollView.contentOffset.x / screen_Width;
+        //        [self btnTitleClick:_titleArray[i]];
+    }
+    
+    if(scrollView.tag==1000)
+    {
+        
+        float h = screen_Width / 414.0f * 200;
+        CGPoint point=scrollView.contentOffset;
+        [_titleBgView setFrame:CGRectMake(0, h+nav_Height-point.y, screen_Width, TITLEVIEW_HEIGHT)];
+        [self.view addSubview:_titleBgView];
+        [_mainScrollView setFrame:CGRectMake(0, h+TITLEVIEW_HEIGHT+nav_Height-point.y, SCREEN_WIDTH, screen_Height)];
+        [self.view addSubview:_mainScrollView];
+        
+        //        for (int i=0; i<_titleArray.count; i++){
+        //            _publiTabView.frame = CGRectMake(screen_Width*i, 0, screen_Width, screen_Height-80);
+        //            [_mainScrollView addSubview:_publiTabView];
+        //
+        //        }
+        if(h+64-point.y<=64){
+            [_mainScrollView setFrame:CGRectMake(0, 17+nav_Height, SCREEN_WIDTH, screen_Height+nav_Height+64)];
+            [self.view addSubview:_mainScrollView];
+            [_titleBgView setFrame:CGRectMake(0, 64, screen_Width, TITLEVIEW_HEIGHT)];
+            [self.view addSubview:_titleBgView];
+            //            for (int i=0; i<_titleArray.count; i++){
+            //                _publiTabView.frame = CGRectMake(screen_Width*i, 0, screen_Width, screen_Height-80);
+            //                [_mainScrollView addSubview:_publiTabView];
+            //        }
+        }
+        else if (h+64-point.y>=h+64)
+        {
+            [_titleBgView setFrame:CGRectMake(0, h+64, screen_Width, TITLEVIEW_HEIGHT)];
+            [_mainScrollView setFrame:CGRectMake(0, h+TITLEVIEW_HEIGHT+64-point.y, SCREEN_WIDTH, screen_Height - NAVI_HEIGHT - TABBAR_HEIGHT - TITLEVIEW_HEIGHT)];
+            [self.view addSubview:_mainScrollView];
+            //            for (int i=0; i<_titleArray.count; i++){
+            //            _publiTabView.frame = CGRectMake(screen_Width*i, 0, screen_Width, screen_Height-80);
+            //            [_mainScrollView addSubview:_publiTabView];
+            //
+            //            }
+        }
+    }
+}
+
+
+
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    return 5;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row < 2) {
+        JDLPublicDetileTableViewCell *cell = [[[NSBundle mainBundle]loadNibNamed:@"JDLPublicDetileTableViewCell" owner:self options:nil]lastObject];
+        //原价的删除线效果
+        NSUInteger length = [cell.lab2.text length];
+        NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:cell.lab2.text];
+        [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, length)];
+        [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0, length)];
+        [cell.lab2 setAttributedText:attri];
+        cell.selectionStyle=UITableViewCellAccessoryNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    }
+    else{
+        JDLPublickSectionTableViewCell *cell1 = [[[NSBundle mainBundle]loadNibNamed:@"JDLPublickSectionTableViewCell" owner:self options:nil]lastObject];
+        return cell1;
+    }
+    
+    
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    JDLBuyViewController *buyVc = [[JDLBuyViewController alloc]init];
+    [self.navigationController pushViewController:buyVc animated:YES];
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (indexPath.row < 2) {
+        if (screen_Width == iphone4_width) {
+            return 274;
+        }else if (screen_Width == iphone6_width){
+            
+            return 274;
+        }else{
+            
+            return 274;
+        }
+    }
+    else{
+        if (screen_Width == iphone4_width) {
+            return 117;
+        }else if (screen_Width == iphone6_width){
+            
+            return 117;
+        }else{
+            
+            return 117;
+        }
+        
+        
+    }
+}
+
+-(void)pushDetileModel:(JDLPublicModel *)model{
+    
+    NSLog(@"dafkjgjkajgfjhagf");
+}
+
+
+@end

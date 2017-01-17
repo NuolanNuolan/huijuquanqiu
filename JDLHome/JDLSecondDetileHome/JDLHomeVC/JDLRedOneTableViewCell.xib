@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="549" id="KGk-i7-Jjw" customClass="JDLRedOneTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="59"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v0q-4d-UaV">
+                        <rect key="frame" x="7" y="0.0" width="361" height="59"/>
+                        <subviews>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ACU-kn-5PS">
+                                <rect key="frame" x="13" y="5" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="ZpO-jv-KZc"/>
+                                </constraints>
+                                <state key="normal" image="pic_HeadPortrait"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mwk-dd-R0N">
+                                <rect key="frame" x="62" y="23" width="299" height="13"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Mwk-dd-R0N" firstAttribute="leading" secondItem="ACU-kn-5PS" secondAttribute="trailing" constant="5" id="4sx-xd-9YP"/>
+                            <constraint firstItem="ACU-kn-5PS" firstAttribute="leading" secondItem="v0q-4d-UaV" secondAttribute="leading" constant="13" id="H0h-kx-R7v"/>
+                            <constraint firstItem="ACU-kn-5PS" firstAttribute="top" secondItem="v0q-4d-UaV" secondAttribute="top" constant="5" id="LQL-5S-diV"/>
+                            <constraint firstItem="Mwk-dd-R0N" firstAttribute="leading" secondItem="ACU-kn-5PS" secondAttribute="trailing" constant="5" id="Qns-uZ-2Nv"/>
+                            <constraint firstItem="Mwk-dd-R0N" firstAttribute="top" secondItem="v0q-4d-UaV" secondAttribute="top" constant="23" id="W9c-dA-t7f"/>
+                            <constraint firstAttribute="trailing" secondItem="Mwk-dd-R0N" secondAttribute="trailing" id="fnY-jA-SEV"/>
+                            <constraint firstAttribute="bottom" secondItem="ACU-kn-5PS" secondAttribute="bottom" constant="10" id="g49-aa-tqa"/>
+                            <constraint firstAttribute="bottom" secondItem="Mwk-dd-R0N" secondAttribute="bottom" constant="23" id="nxD-PT-mTi"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="v0q-4d-UaV" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="1nf-Ug-PwG"/>
+                    <constraint firstAttribute="bottom" secondItem="v0q-4d-UaV" secondAttribute="bottom" id="1uR-qY-LAj"/>
+                    <constraint firstItem="v0q-4d-UaV" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="7" id="Ycf-rO-LI9"/>
+                    <constraint firstAttribute="trailing" secondItem="v0q-4d-UaV" secondAttribute="trailing" constant="7" id="wMl-kV-2AZ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
+            <connections>
+                <outlet property="View_One" destination="v0q-4d-UaV" id="hcr-vY-64a"/>
+            </connections>
+            <point key="canvasLocation" x="526.5" y="378"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="pic_HeadPortrait" width="60" height="60"/>
+    </resources>
+</document>

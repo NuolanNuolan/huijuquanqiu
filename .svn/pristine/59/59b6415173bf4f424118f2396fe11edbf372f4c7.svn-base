@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="JDLIntertionCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="125" height="125"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="125" height="125"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="w5p-d4-tJk">
+                        <rect key="frame" x="36" y="20" width="54" height="54"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="54" id="6h4-EB-506"/>
+                            <constraint firstAttribute="width" constant="54" id="VVk-rj-z1L"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHQ-vz-Mwe">
+                        <rect key="frame" x="0.0" y="82" width="125" height="32"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="nHQ-vz-Mwe" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="24f-vR-an7"/>
+                <constraint firstItem="nHQ-vz-Mwe" firstAttribute="top" secondItem="w5p-d4-tJk" secondAttribute="bottom" constant="8" id="3f2-x0-8fx"/>
+                <constraint firstAttribute="bottom" secondItem="nHQ-vz-Mwe" secondAttribute="bottom" constant="11" id="8eK-Vy-xYv"/>
+                <constraint firstItem="nHQ-vz-Mwe" firstAttribute="top" secondItem="w5p-d4-tJk" secondAttribute="bottom" constant="8" id="9lC-om-5V8"/>
+                <constraint firstAttribute="trailing" secondItem="nHQ-vz-Mwe" secondAttribute="trailing" id="Wn2-ft-Uv6"/>
+                <constraint firstItem="nHQ-vz-Mwe" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="YZZ-yS-2kd"/>
+                <constraint firstItem="w5p-d4-tJk" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="eLl-hO-w22"/>
+                <constraint firstItem="w5p-d4-tJk" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="20" id="mfF-Bn-43o"/>
+            </constraints>
+            <size key="customSize" width="139" height="113"/>
+            <connections>
+                <outlet property="intertionImageView" destination="w5p-d4-tJk" id="PiO-Mc-zKC"/>
+                <outlet property="intertionlab" destination="nHQ-vz-Mwe" id="yxL-Zt-zQ2"/>
+            </connections>
+            <point key="canvasLocation" x="260.5" y="415.5"/>
+        </collectionViewCell>
+    </objects>
+</document>

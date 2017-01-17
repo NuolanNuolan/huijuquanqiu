@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="JDLLogisticsTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="149"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XvO-Ex-PEm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2015-05-05" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2a-M8-7iI">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.61960784310000006" green="0.61568627450000002" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="45" id="7Yn-Qf-JlN"/>
+                            <constraint firstAttribute="trailing" secondItem="o2a-M8-7iI" secondAttribute="trailing" id="ZDh-GN-BEi"/>
+                            <constraint firstItem="o2a-M8-7iI" firstAttribute="top" secondItem="XvO-Ex-PEm" secondAttribute="top" id="c21-dN-Uqd"/>
+                            <constraint firstAttribute="bottom" secondItem="o2a-M8-7iI" secondAttribute="bottom" id="owE-FW-KTh"/>
+                            <constraint firstItem="o2a-M8-7iI" firstAttribute="leading" secondItem="XvO-Ex-PEm" secondAttribute="leading" id="tVg-1K-KDX"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bZA-lI-nsm">
+                        <rect key="frame" x="20" y="45" width="335" height="104"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pic2.png" translatesAutoresizingMaskIntoConstraints="NO" id="oHp-rc-MY9">
+                                <rect key="frame" x="5" y="44" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="IDn-LU-F79"/>
+                                    <constraint firstAttribute="height" constant="50" id="odA-Il-kmt"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="圆通快递" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUq-n0-vrk">
+                                <rect key="frame" x="262" y="10" width="68" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.10980392156862745" green="0.73333333333333328" blue="0.25098039215686274" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="已发货,已发货,已发货,已发货,已发货,已发货,已发货,已发货,已发货," textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTP-Cn-iRG">
+                                <rect key="frame" x="63" y="58" width="259" height="38"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="hnY-aY-TIE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.52941176470588236" green="0.52941176470588236" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="是否发货" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4K-mH-GTa">
+                                <rect key="frame" x="-4" y="11" width="68" height="21"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mTP-Cn-iRG" firstAttribute="leading" secondItem="oHp-rc-MY9" secondAttribute="trailing" constant="5" id="5IK-bT-044"/>
+                            <constraint firstItem="oHp-rc-MY9" firstAttribute="leading" secondItem="bZA-lI-nsm" secondAttribute="leading" constant="5" id="6BG-1a-boL"/>
+                            <constraint firstAttribute="trailing" secondItem="yUq-n0-vrk" secondAttribute="trailing" constant="5" id="I6K-57-KxG"/>
+                            <constraint firstAttribute="bottom" secondItem="mTP-Cn-iRG" secondAttribute="bottom" constant="20" id="Jva-Ca-ENg"/>
+                            <constraint firstAttribute="bottom" secondItem="oHp-rc-MY9" secondAttribute="bottom" constant="10" id="WGB-fm-oCH"/>
+                            <constraint firstItem="yUq-n0-vrk" firstAttribute="top" secondItem="bZA-lI-nsm" secondAttribute="top" constant="10" id="WGX-bJ-kJK"/>
+                            <constraint firstItem="mTP-Cn-iRG" firstAttribute="leading" secondItem="oHp-rc-MY9" secondAttribute="trailing" constant="5" id="dfb-fY-hYH"/>
+                            <constraint firstItem="B4K-mH-GTa" firstAttribute="leading" secondItem="bZA-lI-nsm" secondAttribute="leading" constant="5" id="lKV-jU-2G5"/>
+                            <constraint firstAttribute="trailing" secondItem="mTP-Cn-iRG" secondAttribute="trailing" constant="5" id="liq-TV-0tT"/>
+                            <constraint firstItem="B4K-mH-GTa" firstAttribute="top" secondItem="bZA-lI-nsm" secondAttribute="top" constant="10" id="n4C-Pc-rub"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="bZA-lI-nsm" secondAttribute="bottom" id="Qyy-FW-1ob"/>
+                    <constraint firstItem="XvO-Ex-PEm" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="SyN-Vp-0U9"/>
+                    <constraint firstItem="XvO-Ex-PEm" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="TwD-AQ-x4b"/>
+                    <constraint firstAttribute="trailing" secondItem="bZA-lI-nsm" secondAttribute="trailing" constant="20" id="V9E-nw-BGc"/>
+                    <constraint firstItem="bZA-lI-nsm" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="XIU-L1-388"/>
+                    <constraint firstAttribute="trailing" secondItem="XvO-Ex-PEm" secondAttribute="trailing" id="mwb-rV-aC0"/>
+                    <constraint firstItem="bZA-lI-nsm" firstAttribute="top" secondItem="XvO-Ex-PEm" secondAttribute="bottom" id="p7I-qc-h3y"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <connections>
+                <outlet property="Log_KuaiDi" destination="yUq-n0-vrk" id="PlY-ky-D9Q"/>
+                <outlet property="Log_detail" destination="mTP-Cn-iRG" id="GGg-2g-XKO"/>
+                <outlet property="Log_imagerview" destination="oHp-rc-MY9" id="Dbt-iE-cQ1"/>
+                <outlet property="Log_isFaHuo" destination="B4K-mH-GTa" id="4Qf-vG-JnA"/>
+                <outlet property="Log_time" destination="o2a-M8-7iI" id="5eP-z2-2C6"/>
+                <outlet property="Log_view" destination="bZA-lI-nsm" id="feb-UK-TPe"/>
+            </connections>
+            <point key="canvasLocation" x="394.5" y="358"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="pic2.png" width="56" height="56"/>
+    </resources>
+</document>
